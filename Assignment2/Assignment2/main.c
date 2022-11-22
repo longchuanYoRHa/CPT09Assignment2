@@ -11,11 +11,15 @@
 int a, count = 0;
 typedef struct users
 {
-	char* id[10];
+	char* id[4];
 	char pwd[6];
 	int win;
 	int lose;
 };
+int failnum = 0;
+int* e;
+*e = &failnum;
+
 
 
 //color setting
@@ -46,7 +50,7 @@ int Init_file()
 			exit(0);
 		}
 	}
-	return 1;
+return 1;
 }
 //menu
 int menu()
@@ -60,13 +64,14 @@ int menu()
 	return 0;
 }
 //login or register
-int Log()
+int Log(int *f)
 {
 	//init
-	int c = 0;int Re = 1;
+	int c = 0; int Re = 1;
 	struct users a, b;
 	char temppwd[6];
 	FILE* fp;
+	int i = 0;
 
 	printf("\nPlease enter your decision(1 or 2):");
 	scanf("%d", &c);
@@ -98,11 +103,11 @@ int Log()
 			else
 			{
 				printf("\r\033[k");
-				
+
 				printf("This ID had been occupied, please change one\n");
 				Sleep(3000);
 				fclose(fp);
-				
+
 				system("cls");
 				return 1;
 			}
@@ -137,12 +142,66 @@ int Log()
 	}
 	else if (c == 1)
 	{
+		//login
+		printf("-------Login-------\n");
+		fp = fopen("users.txt", "rb");
+		fread(&b, sizeof(struct users), 1, fp);
+		printf("Please enter your ID: \n");
+		scanf("%s", &a.id);
+		fflush(stdin);
+		//if valid username
+		while (1)
+		{
+			if (strcmp(a.id, b.id))
+			{
+				//valid
+				if (!feof(fp))
+				{
+					fread(&b, sizeof(struct users), 1, fp);
+				}
+				else
+				{
+					printf("The ID is valid! ");
+					Sleep(1500);
+					fclose(fp);
+					return 1;
+				}
+			}
+			break;
+		}
+		//password
+		printf("Please enter your password:\n");
+		scanf("%s", &a.pwd);
+		fflush(stdin);
+		if (strcmp(a.pwd, b.pwd))
+		{
+			if(f<3)
+			{
+				printf("wrong password or username!Please try again!");
+				f++;
+				return 1;
+			}
+			else
+			{
+				f = 0;
+				while (i <= 15)
+				{
+					system("cls");
+					printf("You've tryed too many times, please try agian after %d s\n", i);
+					i++;
+				}
+			}
+		}
+		printf("login success!\n");
+		return 0;
 
 	}
-	return 0;
+	printf("Please enter according to suggestion!");
+	return 1;
 }
 
 //display gameboard
+
 
 int main()
 {
@@ -163,7 +222,7 @@ int main()
 	//display user interface
 	menu();
 	//register or login
-	while (Log())
+	while (Log(*e))
 	{
 		Sleep(500);
 	}
