@@ -142,63 +142,76 @@ int Log(int *f)
 	}
 	else if (c == 1)
 	{
-		//login
-		printf("-------Login-------\n");
-		fp = fopen("users.txt", "rb");
-		fread(&b, sizeof(struct users), 1, fp);
-		printf("Please enter your ID: \n");
-		scanf("%s", &a.id);
-		fflush(stdin);
-		//if valid username
-		while (1)
-		{
-			if (strcmp(a.id, b.id))
-			{
-				//valid
-				if (!feof(fp))
-				{
-					fread(&b, sizeof(struct users), 1, fp);
-				}
-				else
-				{
-					printf("The ID is valid! ");
-					Sleep(1500);
-					fclose(fp);
-					return 1;
-				}
-			}
-			break;
-		}
-		//password
-		printf("Please enter your password:\n");
-		scanf("%s", &a.pwd);
-		fflush(stdin);
-		if (strcmp(a.pwd, b.pwd))
-		{
-			if(f<3)
-			{
-				printf("wrong password or username!Please try again!");
-				f++;
-				return 1;
-			}
-			else
-			{
-				f = 0;
-				while (i <= 15)
-				{
-					system("cls");
-					printf("You've tryed too many times, please try agian after %d s\n", i);
-					i++;
-				}
-			}
-		}
-		printf("login success!\n");
-		return 0;
-
+		/*printf("%d", *f);*/
+		return(login(f));
 	}
+
 	printf("Please enter according to suggestion!");
 	return 1;
 }
+//login
+int login(int *f)
+{
+	int c = 0; int Re = 1;
+	struct users a, b;
+	char temppwd[6];
+	FILE* fp;
+	int i = 0;
+	//login
+	printf("-------Login-------\n");
+	fp = fopen("users.txt", "rb");
+	fread(&b, sizeof(struct users), 1, fp);
+	Sleep(1000);
+	printf("Please enter your ID: \n");
+	scanf("%s", &a.id);
+	fflush(stdin);
+	//if valid username
+	while (1)
+	{
+		if (strcmp(a.id, b.id))
+		{
+			//valid
+			if (!feof(fp))
+			{
+				fread(&b, sizeof(struct users), 1, fp);
+			}
+			else
+			{
+				printf("The ID is valid! ");
+				Sleep(1500);
+				fclose(fp);
+				return 1;
+			}
+		}
+		break;
+	}
+	//password
+	printf("Please enter your password:\n");
+	/*scanf("%s", &a.pwd);
+	fflush(stdin);
+	if (strcmp(a.pwd, b.pwd))
+	{
+		if (f < 3)
+		{
+			printf("wrong password or username!Please try again!");
+			f++;
+			return 1;
+		}
+		else
+		{
+			f = 0;
+			while (i <= 15)
+			{
+				system("cls");
+				printf("You've tryed too many times, please try agian after %d s\n", i);
+				i++;
+			}
+		}
+	}
+	printf("login success!\n");
+	return 0;*/
+}
+
 
 //display gameboard
 
@@ -222,7 +235,7 @@ int main()
 	//display user interface
 	menu();
 	//register or login
-	while (Log(*e))
+	while (Log(e))
 	{
 		Sleep(500);
 	}
